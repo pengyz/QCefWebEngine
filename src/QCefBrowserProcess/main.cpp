@@ -14,13 +14,7 @@
 
 #pragma region project_heasers
 #include "QCefViewRenderApp.h"
-#include "tracer.h"
 #pragma endregion project_heasers
-
-extern "C"
-{
-    _declspec(dllexport) bool Run(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow);
-}
 
 HANDLE GetParentProcess()
 {
@@ -43,7 +37,8 @@ HANDLE GetParentProcess()
     return OpenProcess(SYNCHRONIZE, FALSE, ProcessEntry.th32ParentProcessID);
 }
 
-bool Run(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
+//入口函数
+int APIENTRY _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);

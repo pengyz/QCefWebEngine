@@ -3,8 +3,6 @@
 #include <QVector>
 #include <QVariant>
 
-#define SIGNATURE_VALID_PARTS_COUNT         6
-
 struct JavaScriptMetaParam {
     QString name;
     QString typeName;

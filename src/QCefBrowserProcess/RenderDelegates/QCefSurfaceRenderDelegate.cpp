@@ -8,7 +8,6 @@
 #include "QCefSurfaceRenderDelegate.h"
 #include "QCefClient.h"
 #include "QCefJavaScriptBinder.h"
-#include "tracer.h"
 #pragma endregion project_headers
 
 namespace QCefViewSurfaceRenderDelegate {
@@ -44,7 +43,7 @@ namespace QCefViewSurfaceRenderDelegate {
         // MessageBoxA(NULL, "getLinkAtPosition", "", MB_OK);
         auto v8ctx = browser->GetMainFrame()->GetV8Context();
         if (!v8ctx) {
-            TRACEE("v8 context is null.");
+            //TRACEE("v8 context is null.");
             return;
         }
         CefString url;
@@ -52,7 +51,7 @@ namespace QCefViewSurfaceRenderDelegate {
         v8ctx->Enter();
         do {
             if (args->GetSize() != 2) {
-                TRACEW("args size error, %d", args->GetSize());
+                //TRACEW("args size error, %d", args->GetSize());
                 break;
             }
             x = args->GetInt(0);
@@ -63,11 +62,11 @@ namespace QCefViewSurfaceRenderDelegate {
             CefRefPtr<CefV8Value> ret;
             CefRefPtr<CefV8Exception> excp;
             if (!v8ctx->Eval(script.c_str(), browser->GetMainFrame()->GetURL(), 0, ret, excp)) {
-                TRACEW("eval js failed, %s", script.c_str());
+                //TRACEW("eval js failed, %s", script.c_str());
                 break;
             }
             if (!ret || !ret->IsString()) {
-                TRACEW("eval js failed, no return: %s", script.c_str());
+                //TRACEW("eval js failed, no return: %s", script.c_str());
                 break;
             }
             url = ret->GetStringValue();
@@ -86,11 +85,11 @@ namespace QCefViewSurfaceRenderDelegate {
     {
         auto v8ctx = browser->GetMainFrame()->GetV8Context();
         if (!v8ctx) {
-            TRACEE("v8 context is null.");
+            //TRACEE("v8 context is null.");
             return;
         }
         if (args->GetSize() != 2) {
-            TRACEW("args size error, %d", args->GetSize());
+            //TRACEW("args size error, %d", args->GetSize());
             return;
         }
 
@@ -110,22 +109,22 @@ namespace QCefViewSurfaceRenderDelegate {
 
             script = "document.documentElement.clientWidth";
             if (!v8ctx->Eval(script.c_str(), browser->GetMainFrame()->GetURL(), 0, ret, excp)) {
-                TRACEW("eval js failed, %s", script.c_str());
+                //TRACEW("eval js failed, %s", script.c_str());
                 break;
             }
             if (!ret || !ret->IsInt()) {
-                TRACEW("eval js failed, no return: %s", script.c_str());
+                //TRACEW("eval js failed, no return: %s", script.c_str());
                 break;
             }
             docWidth = ret->GetIntValue();
 
             script = "window.innerWidth";
             if (!v8ctx->Eval(script.c_str(), browser->GetMainFrame()->GetURL(), 0, ret, excp)) {
-                TRACEW("eval js failed, %s", script.c_str());
+                //TRACEW("eval js failed, %s", script.c_str());
                 break;
             }
             if (!ret || !ret->IsInt()) {
-                TRACEW("eval js failed, no return: %s", script.c_str());
+                //TRACEW("eval js failed, no return: %s", script.c_str());
                 break;
             }
             windowWidth = ret->GetIntValue();
@@ -143,11 +142,11 @@ namespace QCefViewSurfaceRenderDelegate {
     {
         auto v8ctx = browser->GetMainFrame()->GetV8Context();
         if (!v8ctx) {
-            TRACEE("v8 context is null.");
+            //TRACEE("v8 context is null.");
             return;
         }
         if (args->GetSize() != 2) {
-            TRACEW("args size error, %d", args->GetSize());
+            //TRACEW("args size error, %d", args->GetSize());
             return;
         }
 
@@ -167,22 +166,22 @@ namespace QCefViewSurfaceRenderDelegate {
 
             script = "document.documentElement.clientHeight";
             if (!v8ctx->Eval(script.c_str(), browser->GetMainFrame()->GetURL(), 0, ret, excp)) {
-                TRACEW("eval js failed, %s", script.c_str());
+                //TRACEW("eval js failed, %s", script.c_str());
                 break;
             }
             if (!ret || !ret->IsInt()) {
-                TRACEW("eval js failed, no return: %s", script.c_str());
+                //TRACEW("eval js failed, no return: %s", script.c_str());
                 break;
             }
             docHeight = ret->GetIntValue();
 
             script = "window.innerHeight";
             if (!v8ctx->Eval(script.c_str(), browser->GetMainFrame()->GetURL(), 0, ret, excp)) {
-                TRACEW("eval js failed, %s", script.c_str());
+                //TRACEW("eval js failed, %s", script.c_str());
                 break;
             }
             if (!ret || !ret->IsInt()) {
-                TRACEW("eval js failed, no return: %s", script.c_str());
+                //TRACEW("eval js failed, no return: %s", script.c_str());
                 break;
             }
             windowHeight = ret->GetIntValue();

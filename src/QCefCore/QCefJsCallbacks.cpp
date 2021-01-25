@@ -2,11 +2,45 @@
 #include "public/QCefJavaScriptEngine.h"
 #include "public/CefCoreBrowser.h"
 #include "public/QCefCoreManagerBase.h"
-#include "include/baseutility.h"
-#include "include/jsonbuilder.h"
+#include "QCefProtocol.h"
 
 #include <QJsonArray>
+#include <QJsonParseError>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
 
+
+bool getSignatureIdentifier(const QString& jsCallbackSignature, int& browerId, qint64& frameId)
+{
+    browerId = 0;
+    frameId = 0;
+    auto signatures = jsCallbackSignature.split(";", QString::SkipEmptyParts);
+    if (signatures.size() != 1)
+        return false;
+    auto pairs = signatures[0].split(".", QString::SkipEmptyParts);
+    if (pairs.size() != QCEF_SIGNATURE_VALID_PARTS_COUNT)
+        return false;
+    browerId = pairs[0].toInt();
+    frameId = pairs[1].toLongLong();
+    return true;
+}
+
+QStringList getCallbackSignatureList(const QString& jsCallbackSignature)
+{
+    //TRACED("jsCallbackSignature is: %s", qPrintable(jsCallbackSignature));
+    QStringList signatureList;
+    QJsonParseError jsonError;
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(jsCallbackSignature.toUtf8(), &jsonError);
+    if (jsonError.error != QJsonParseError::NoError)
+        return signatureList;
+    QJsonObject jsonObj = jsonDoc.object();
+    if (!jsonObj.contains("callbacks"))
+        return signatureList;
+    auto sigsValue = jsonObj["callbacks"].toString();
+    signatureList = sigsValue.split(";", QString::SkipEmptyParts);
+    return signatureList;
+}
 
 JavaScriptCallback::JavaScriptCallback(const QString& signature, QCefCoreManagerBase* coreManager)
     : m_callbackSignature(signature), m_coreManager(coreManager)
@@ -110,7 +144,12 @@ QString JavaScriptGetDataCallback::buildGetDataJsonResult(int status, const QStr
     QString strResultCallback;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(data.toUtf8(), &jsonError);
     if (jsonError.error != QJsonParseError::NoError) {
-        strResultCallback = JsonBuilder().add("status", status).add("msg", error).add("data", data).build();
+        QJsonObject jsonObj;
+        jsonObj["status"] = status;
+        jsonObj["msg"] = error;
+        jsonObj["data"] = data;
+        strResultCallback = QJsonDocument(jsonObj).toJson(QJsonDocument::Indented);
+        //strResultCallback = JsonBuilder().add("status", status).add("msg", error).add("data", data).build();
     } else {
         QJsonValue dataJsonValue;
         if (jsonDoc.isArray()) {
@@ -118,7 +157,12 @@ QString JavaScriptGetDataCallback::buildGetDataJsonResult(int status, const QStr
         } else if (jsonDoc.isObject()) {
             dataJsonValue = jsonDoc.object();
         }
-        strResultCallback = JsonBuilder().add("status", status).add("msg", error).add("data", dataJsonValue).build();
+        //strResultCallback = JsonBuilder().add("status", status).add("msg", error).add("data", dataJsonValue).build();
+        QJsonObject jsonObj;
+        jsonObj["status"] = status;
+        jsonObj["msg"] = error;
+        jsonObj["data"] = dataJsonValue;
+        strResultCallback = QJsonDocument(jsonObj).toJson(QJsonDocument::Indented);
     }
     return strResultCallback;
 }

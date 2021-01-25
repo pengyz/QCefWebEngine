@@ -7,6 +7,10 @@
 #include <QSharedPointer>
 #include <QVector>
 
+bool getSignatureIdentifier(const QString& jsCallbackSignature, int& browerId, qint64& frameId);
+QStringList getCallbackSignatureList(const QString& jsCallbackSignature);
+
+
 class QCEFCORE_EXPORT JavaScriptCallback {
 public:
     JavaScriptCallback(const QString& signature, class QCefCoreManagerBase* coreManager);

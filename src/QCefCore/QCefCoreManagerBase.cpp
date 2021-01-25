@@ -3,9 +3,6 @@
 #include "public/CefCoreBrowser.h"
 #include "public/QCefJsCallbacks.h"
 #include "public/QCefJavaScriptEngine.h"
-#include "include/tracer.h"
-#include "include/assertutil.h"
-#include "include/baseutility.h"
 
 QCefCoreManagerBase* QCefCoreManagerBase::m_instance = nullptr;
 
@@ -31,17 +28,17 @@ void QCefCoreManagerBase::init(bool bWindowless, bool bForceEnableDevTool)
     _pImpl = doImplInit();
     _pImpl->init(bWindowless, bForceEnableDevTool);
 
-    ASSERT(connect(_pImpl, &QCefCoreManagerBaseImpl::sig_removeBrowserNotify, this, &QCefCoreManagerBase::sig_removeBrowserNotify, Qt::QueuedConnection));
-    ASSERT(connect(_pImpl, &QCefCoreManagerBaseImpl::sig_browserAddedNotify, this, &QCefCoreManagerBase::sig_browserAddedNotify, Qt::QueuedConnection));
-    ASSERT(connect(_pImpl, &QCefCoreManagerBaseImpl::sig_notifyBrowserWindowIntergrate, this, &QCefCoreManagerBase::sig_notifyBrowserWindowIntergrate, Qt::QueuedConnection));
+    connect(_pImpl, &QCefCoreManagerBaseImpl::sig_removeBrowserNotify, this, &QCefCoreManagerBase::sig_removeBrowserNotify, Qt::QueuedConnection);
+    connect(_pImpl, &QCefCoreManagerBaseImpl::sig_browserAddedNotify, this, &QCefCoreManagerBase::sig_browserAddedNotify, Qt::QueuedConnection);
+    connect(_pImpl, &QCefCoreManagerBaseImpl::sig_notifyBrowserWindowIntergrate, this, &QCefCoreManagerBase::sig_notifyBrowserWindowIntergrate, Qt::QueuedConnection);
 
-    ASSERT(connect(_pImpl, &QCefCoreManagerBaseImpl::sig_loadingStateChanged, this, &QCefCoreManagerBase::sig_loadingStateChanged, Qt::QueuedConnection));
-    ASSERT(connect(_pImpl, &QCefCoreManagerBaseImpl::sig_loadStart, this, &QCefCoreManagerBase::sig_loadStart, Qt::QueuedConnection));
-    ASSERT(connect(_pImpl, &QCefCoreManagerBaseImpl::sig_loadEnd, this, &QCefCoreManagerBase::sig_loadEnd, Qt::QueuedConnection));
-    ASSERT(connect(_pImpl, &QCefCoreManagerBaseImpl::sig_loadError, this, &QCefCoreManagerBase::sig_loadError, Qt::QueuedConnection));
-    ASSERT(connect(_pImpl, &QCefCoreManagerBaseImpl::sig_notifyFullScreenModeChanged, this, &QCefCoreManagerBase::sig_notifyFullScreenModeChanged, Qt::QueuedConnection));
+    connect(_pImpl, &QCefCoreManagerBaseImpl::sig_loadingStateChanged, this, &QCefCoreManagerBase::sig_loadingStateChanged, Qt::QueuedConnection);
+    connect(_pImpl, &QCefCoreManagerBaseImpl::sig_loadStart, this, &QCefCoreManagerBase::sig_loadStart, Qt::QueuedConnection);
+    connect(_pImpl, &QCefCoreManagerBaseImpl::sig_loadEnd, this, &QCefCoreManagerBase::sig_loadEnd, Qt::QueuedConnection);
+    connect(_pImpl, &QCefCoreManagerBaseImpl::sig_loadError, this, &QCefCoreManagerBase::sig_loadError, Qt::QueuedConnection);
+    connect(_pImpl, &QCefCoreManagerBaseImpl::sig_notifyFullScreenModeChanged, this, &QCefCoreManagerBase::sig_notifyFullScreenModeChanged, Qt::QueuedConnection);
 
-    ASSERT(connect(_pImpl, &QCefCoreManagerBaseImpl::sig_allBrowserClosed, this, &QCefCoreManagerBase::sig_allBrowserClosed, Qt::QueuedConnection));
+    connect(_pImpl, &QCefCoreManagerBaseImpl::sig_allBrowserClosed, this, &QCefCoreManagerBase::sig_allBrowserClosed, Qt::QueuedConnection);
 }
 
 bool QCefCoreManagerBase::createBrowser(const QString& webId, const QString& url, const QString& shmName,
@@ -73,13 +70,13 @@ void QCefCoreManagerBase::closeAllBrowsers(bool bForce)
 bool QCefCoreManagerBase::setCookie(const QString& pchHostname, const QString& pchKey, const QString& pchValue, const QString& pchPath /*= "/"*/, float nExpires /*= 0*/, bool bSecure /*= false*/, bool bHTTPOnly /*= false*/)
 {
     if (pchHostname.isEmpty() || pchKey.isEmpty() || pchValue.isEmpty()) {
-        TRACEE("param error.");
+        //TRACEE("param error.");
         return false;
     }
 
     auto cookieMgr = CefCookieManager::GetGlobalManager(nullptr);
     if (!cookieMgr) {
-        TRACEE("cookie manager not found.");
+        //TRACEE("cookie manager not found.");
         return false;
     }
     CefCookie cookie;

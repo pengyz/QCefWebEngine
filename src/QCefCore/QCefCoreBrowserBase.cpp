@@ -1,6 +1,4 @@
 #include "QCefCoreBrowserBase.h"
-#include "include/tracer.h"
-#include "include/assertutil.h"
 #include "QCefProtocol.h"
 
 #include <QVariant>
@@ -287,7 +285,7 @@ bool QCefCoreBrowserBase::invokeJavaScriptCallback(qint64 frameId, const QString
     }
     CefRefPtr<CefFrame> frame = _browser->GetFrame(frameId);
     if (!frame) {
-        TRACEE("browserId: %d get frame by frameId: %ld failed !", getBrowserId(), frameId);
+        //TRACEE("browserId: %d get frame by frameId: %ld failed !", getBrowserId(), frameId);
         return false;
     }
     frame->SendProcessMessage(CefProcessId::PID_RENDERER, msg);
@@ -305,7 +303,7 @@ bool QCefCoreBrowserBase::clearJavaScriptCallback(qint64 frameId, const QString&
     paramValue->SetString(idx++, jsCallbackSignature.toStdWString());
     CefRefPtr<CefFrame> frame = _browser->GetFrame(frameId);
     if (!frame) {
-        TRACEE("browserId: %d get frame by frameId: %ld failed !", getBrowserId(), frameId);
+        //TRACEE("browserId: %d get frame by frameId: %ld failed !", getBrowserId(), frameId);
         return false;
     }
     frame->SendProcessMessage(CefProcessId::PID_RENDERER, msg);
@@ -575,7 +573,7 @@ bool QCefCoreBrowserBase::setZoomLevel(double level)
 ///////////////////////////////////
 bool QCefCoreBrowserBase::browserMouseEvent(unsigned int message, int x, int y, unsigned int flags)
 {
-    TRACET();
+    //TRACET();
     if (!_browser)
         return false;
     auto pHost = _browser->GetHost();
@@ -584,7 +582,7 @@ bool QCefCoreBrowserBase::browserMouseEvent(unsigned int message, int x, int y, 
     mouse_event.x = x;
     mouse_event.y = y;
     mouse_event.modifiers = flags;
-    TRACED("message = %d,pos = (%d,%d)", message, x, y);
+    //TRACED("message = %d,pos = (%d,%d)", message, x, y);
     if (WM_LBUTTONDOWN == message) {
         pHost->SendMouseClickEvent(mouse_event, MBT_LEFT, false, 1);
     } else if (WM_RBUTTONDOWN == message) {
@@ -690,7 +688,7 @@ bool QCefCoreBrowserBase::browserMouseWheel(int delta)
     mouse_event.x = getMousePoint().x();
     mouse_event.y = getMousePoint().y();
     // mouse_event.modifiers = flags;
-    TRACED("pos = (%d,%d)", mouse_event.x, mouse_event.y);
+    //TRACED("pos = (%d,%d)", mouse_event.x, mouse_event.y);
     pHost->SendMouseWheelEvent(mouse_event, 0, delta);
     return true;
 }
@@ -744,14 +742,14 @@ bool QCefCoreBrowserBase::browserKeyPress(unsigned int charCode, unsigned int fl
 QCefCoreBrowserLocker::QCefCoreBrowserLocker(const QSharedPointer<CefCoreBrowser>& browser, const char* file, const char* function, int line)
     :pBrowserPtr(browser), _file(QString::fromLocal8Bit(file)), _function(function), _line(line)
 {
-    TRACED("%s: file: %s, function: %s, line: %d", __FUNCTION__, qPrintable(_file), qPrintable(_function), _line);
+    //TRACED("%s: file: %s, function: %s, line: %d", __FUNCTION__, qPrintable(_file), qPrintable(_function), _line);
     Q_ASSERT(pBrowserPtr);
     pBrowserPtr->lock();
 }
 
 QCefCoreBrowserLocker::~QCefCoreBrowserLocker()
 {
-    TRACED("%s: file: %s, function: %s, line: %d", __FUNCTION__, qPrintable(_file), qPrintable(_function), _line);
+    //TRACED("%s: file: %s, function: %s, line: %d", __FUNCTION__, qPrintable(_file), qPrintable(_function), _line);
     Q_ASSERT(pBrowserPtr);
     pBrowserPtr->unlock();
 }

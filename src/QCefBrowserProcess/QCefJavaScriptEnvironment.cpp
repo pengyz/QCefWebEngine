@@ -1,5 +1,5 @@
 #include "QCefJavaScriptEnvironment.h"
-#include "tracer.h"
+#include "QCefProtocol.h"
 
 QCefJavaScriptEnvironment::QCefJavaScriptEnvironment(QObject * parent)
 {
@@ -25,53 +25,54 @@ JSMetaObjectPairInfo QCefJavaScriptEnvironment::getMetaObjectInfo(const QString&
 
 bool QCefJavaScriptEnvironment::invokeCallBack(const QString& signature, CefRefPtr<CefListValue> argumentList)
 {
-    TRACED("signature is: %s", qPrintable(signature));
+    //TRACED("signature is: %s", qPrintable(signature));
     auto sigList = signature.split(".");
-    if (sigList.size() != SIGNATURE_VALID_PARTS_COUNT)
+    if (sigList.size() != QCEF_SIGNATURE_VALID_PARTS_COUNT)
         return false;
     int browserId = sigList[0].toInt();
     int frameId = sigList[1].toInt();
     const QString& className = sigList[2];
     const QString& method = sigList[3];
-    TRACED("className is: %s, method is: %s", qPrintable(className), qPrintable(method));
+    //TRACED("className is: %s, method is: %s", qPrintable(className), qPrintable(method));
 
     if (!m_javaScriptObjectMap.contains(className)) {
-        TRACEE("js object map not found %s", qPrintable(className));
+        //TRACEE("js object map not found %s", qPrintable(className));
         return false;
     }
     QPair<CefRefPtr<QCefJavaScriptObject>, CefRefPtr<CefV8Value>> jsObjectPair = m_javaScriptObjectMap[className];
     if (!jsObjectPair.first || !jsObjectPair.second) {
-        TRACEE("%s: jsObjectPair invalid !", qPrintable(className));
+        //TRACEE("%s: jsObjectPair invalid !", qPrintable(className));
         return false;
     }
     CefRefPtr<QCefFunctionObject> functionObj = jsObjectPair.first->getFunction(method);
     if (!functionObj) {
-        TRACEE("get functionObj failed !");
+        //TRACEE("get functionObj failed !");
         return false;
     }
 
     CefRefPtr<CefV8Value> retVal;
     CefString exception;
     bool bRet = functionObj->ExecuteCallback(signature.toStdWString(), jsObjectPair.second, argumentList, retVal, exception);
-    if (bRet)
+    /*if (bRet) {
         TRACED("execute callback using signature: %s success !", qPrintable(signature));
-    else
+    } else {
         TRACEE("execute callback using signature: %s failed !!!", qPrintable(signature));
+    }*/
     return bRet;
 }
 
 bool QCefJavaScriptEnvironment::clearFunctionCallbacks(const QStringList& signatures)
 {
     for (const auto& signature : signatures) {
-        TRACED("signature is: %s", qPrintable(signature));
+        //TRACED("signature is: %s", qPrintable(signature));
         auto sigList = signature.split(".");
-        if (sigList.size() != SIGNATURE_VALID_PARTS_COUNT)
+        if (sigList.size() != QCEF_SIGNATURE_VALID_PARTS_COUNT)
             return false;
         int browserId = sigList[0].toInt();
         int frameId = sigList[1].toInt();
         const QString& className = sigList[2];
         const QString& method = sigList[3];
-        TRACED("class is: %s, method is: %s", qPrintable(className), qPrintable(method));
+        //TRACED("class is: %s, method is: %s", qPrintable(className), qPrintable(method));
 
         if (!m_javaScriptObjectMap.contains(className))
             return false;

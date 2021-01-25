@@ -4,8 +4,6 @@
 #include "CefViewBrowserApp/QCefViewBrowserApp.h"
 #include "CefViewBrowserApp/QCefBrowserHandlerBase.h"
 #include "public/CefCoreBrowser.h"
-#include "include/assertutil.h"
-#include "include/tracer.h"
 #include "QCefProtocol.h"
 
 #include <QMetaType>
@@ -58,21 +56,21 @@ bool QCefCoreManagerBaseImpl::createBrowser(const QString& webId, const QString&
 void QCefCoreManagerBaseImpl::init(bool bWindowless, bool bForceEnableDevTool)
 {
     _bWindowless = bWindowless;
-    ASSERT(initCef(bForceEnableDevTool));
+    initCef(bForceEnableDevTool);
     //初始化BrowserHandler
     _browserHandler = doInitCefBrowserHandler();
-    ASSERT(connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_addBrowser, this, &QCefCoreManagerBaseImpl::onAddBrowser, Qt::DirectConnection));
-    ASSERT(connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_removeBrowser, this, &QCefCoreManagerBaseImpl::onRemoveBrowser, Qt::DirectConnection));
-    ASSERT(connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_closingBrowser, this, &QCefCoreManagerBaseImpl::onClosingBrowser, Qt::DirectConnection));
-    ASSERT(connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_notifyBrowserEarly, this, &QCefCoreManagerBaseImpl::onAddBrowserEarly, Qt::DirectConnection));
-    ASSERT(connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_notifyFullScreenModeChanged, this, &QCefCoreManagerBaseImpl::sig_notifyFullScreenModeChanged, Qt::QueuedConnection));
-    ASSERT(connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_notifyDevToolBrowser, this, &QCefCoreManagerBaseImpl::onAddDevToolBrowser, Qt::DirectConnection));
-    ASSERT(connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_removeDevToolBrowser, this, &QCefCoreManagerBaseImpl::onRemoveDevToolBrowser, Qt::DirectConnection));
+    connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_addBrowser, this, &QCefCoreManagerBaseImpl::onAddBrowser, Qt::DirectConnection);
+    connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_removeBrowser, this, &QCefCoreManagerBaseImpl::onRemoveBrowser, Qt::DirectConnection);
+    connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_closingBrowser, this, &QCefCoreManagerBaseImpl::onClosingBrowser, Qt::DirectConnection);
+    connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_notifyBrowserEarly, this, &QCefCoreManagerBaseImpl::onAddBrowserEarly, Qt::DirectConnection);
+    connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_notifyFullScreenModeChanged, this, &QCefCoreManagerBaseImpl::sig_notifyFullScreenModeChanged, Qt::QueuedConnection);
+    connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_notifyDevToolBrowser, this, &QCefCoreManagerBaseImpl::onAddDevToolBrowser, Qt::DirectConnection);
+    connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_removeDevToolBrowser, this, &QCefCoreManagerBaseImpl::onRemoveDevToolBrowser, Qt::DirectConnection);
 
-    ASSERT(connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_loadingStateChanged, this, &QCefCoreManagerBaseImpl::sig_loadingStateChanged, Qt::QueuedConnection));
-    ASSERT(connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_loadStart, this, &QCefCoreManagerBaseImpl::sig_loadStart, Qt::QueuedConnection));
-    ASSERT(connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_loadEnd, this, &QCefCoreManagerBaseImpl::sig_loadEnd, Qt::QueuedConnection));
-    ASSERT(connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_loadError, this, &QCefCoreManagerBaseImpl::sig_loadError, Qt::QueuedConnection));
+    connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_loadingStateChanged, this, &QCefCoreManagerBaseImpl::sig_loadingStateChanged, Qt::QueuedConnection);
+    connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_loadStart, this, &QCefCoreManagerBaseImpl::sig_loadStart, Qt::QueuedConnection);
+    connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_loadEnd, this, &QCefCoreManagerBaseImpl::sig_loadEnd, Qt::QueuedConnection);
+    connect(_browserHandler.get(), &QCefBrowserHandlerBase::sig_loadError, this, &QCefCoreManagerBaseImpl::sig_loadError, Qt::QueuedConnection);
 }
 
 void QCefCoreManagerBaseImpl::deInit()
@@ -160,7 +158,7 @@ bool QCefCoreManagerBaseImpl::initCef(bool bForceEnableDevTool)
     _cef_settings.windowless_rendering_enabled = _bWindowless;
 
     if (!modifyCefConfig(_cef_settings)) {
-        TRACEE("modifyCefConfig failed !");
+        //TRACEE("modifyCefConfig failed !");
         return false;
     }
 
@@ -172,7 +170,7 @@ bool QCefCoreManagerBaseImpl::initCef(bool bForceEnableDevTool)
     // Initialize CEF.
     void* sandboxInfo = nullptr;
     if (!CefInitialize(main_args, _cef_settings, _app, sandboxInfo)) {
-        TRACEE("CefInitialize failed !");
+        //TRACEE("CefInitialize failed !");
         return false;
     }
     return true;
@@ -188,14 +186,14 @@ void QCefCoreManagerBaseImpl::onAddBrowser(const QString& webId, const CefRefPtr
         if (browser->IsSame(_browserMap[webId]->_browser))
             return;
         _browserMap.remove(webId);
-        TRACEE("webId: %s invalid, try readd it!", qPrintable(webId));
+        //TRACEE("webId: %s invalid, try readd it!", qPrintable(webId));
     }
     // MessageBoxA(NULL, "QCefCoreManagerBaseImpl::onAddBrowser", "", MB_OK);
     QString strShmNameReal = shmName + QString::number(browserId);
 
     auto pCoreBrowser = doCreateCoreBrowser(browser, webId, strShmNameReal, extraData, this);
     if (!pCoreBrowser) {
-        TRACEE("webId: %s create failed!", qPrintable(webId));
+        //TRACEE("webId: %s create failed!", qPrintable(webId));
         return;
     }
     _browserMap[webId] = pCoreBrowser;
@@ -219,7 +217,7 @@ void QCefCoreManagerBaseImpl::onRemoveBrowser(int browserId)
     if (pos != _browserMap.end()) {
         QString webId = pos.key();
         _browserMap.erase(pos);
-        TRACED("browser id: %d webId: %s removed browser !", browserId, qPrintable(webId));
+        //TRACED("browser id: %d webId: %s removed browser !", browserId, qPrintable(webId));
         emit sig_removeBrowserNotify(webId, browserId);
         if (_browserMap.isEmpty())
             bBrowserMapEmpty = true;
@@ -287,7 +285,7 @@ void QCefCoreManagerBaseImpl::onAddBrowserEarly(const CefRefPtr<CefBrowser>& bro
 bool QCefCoreManagerBaseImpl::closeBrowser(QSharedPointer<QCefCoreBrowserBase> browser, bool bForce)
 {
     if (!browser) {
-        TRACED("browser not found !");
+        //TRACED("browser not found !");
         return false;
     }
     if (browser->_browser->IsLoading()) {

@@ -94,7 +94,6 @@ PRINT_CEF_CONFIG()
 
 # Add all targets
 ###############################################################
-add_subdirectory(src/QCefProto)
 
 include_directories(
   QCefProto
@@ -102,17 +101,22 @@ include_directories(
 )
 
 set(QCEF_CORE_DLL "QCefCore")
-add_subdirectory(src/QCefCore)
 set(QCEF_BROWSER_DLL "QCefBrowser")
-add_subdirectory(src/QCefBrowser)
 set(QCEF_VIEW_DLL "QCefView")
-add_subdirectory(src/QCefView)
 set(QCEF_OVERLAY_DLL "QCefOffscreen")
+set(QCEF_BROWSER_EXE "QCefBrowserProcess")
+
+set(QCEF_FOLDER_NAME "QCefWebEngine")
+
+add_subdirectory(src/QCefCore)
+add_subdirectory(src/QCefView)
 add_subdirectory(src/QCefOffscreen)
+add_subdirectory(src/QCefBrowserProcess)
+add_subdirectory(src/QCefProto)
+
 
 ###test
 add_subdirectory(test/App)
-add_subdirectory(test/Browser)
 
 ###############################################################
 

@@ -28,8 +28,6 @@
 #include "QCefProtocol.h"
 
 #include "public/QCefJavaScriptEngine.h"
-#include "include/tracer.h"
-#include "npl-shm_util.h"
 #include "CCefSetting.h"
 
 
@@ -188,7 +186,7 @@ bool QCefBrowserHandlerBase::showDevTool(CefRefPtr<CefBrowser> browser, int x, i
 {
     int debugPort = QCefSetting::remoteDebuggingPort();
     if (0 == debugPort) {
-        TRACEW("[!BP-CC-SDT!] not support,%d", debugPort);
+        //TRACEW("[!BP-CC-SDT!] not support,%d", debugPort);
         return false;
     }
     if (!browser)
@@ -199,7 +197,7 @@ bool QCefBrowserHandlerBase::showDevTool(CefRefPtr<CefBrowser> browser, int x, i
 
     CefBrowserSettings settings;
     CefPoint pt(x, y);
-    TRACED("show...");
+    //TRACED("show...");
     //use the same client as the browser
     CefRefPtr<CefDevToolClient> client = new CefDevToolClient;
     connect(client.get(), &CefDevToolClient::sig_notifyBrowserEarly, this, &QCefBrowserHandlerBase::sig_notifyDevToolBrowser, Qt::DirectConnection);
@@ -376,7 +374,7 @@ bool QCefBrowserHandlerBase::DispatchNotifyRequest(CefRefPtr<CefBrowser> browser
 
         QVariantList varList;
         //convert from CefListValue to QVariantList
-        TRACED("messageArguments size is: %d", messageArguments->GetSize());
+        //TRACED("messageArguments size is: %d", messageArguments->GetSize());
         for (size_t i = 0; i < messageArguments->GetSize(); i++) {
             switch (messageArguments->GetType(i)) {
             case VTYPE_INT: {
@@ -404,7 +402,7 @@ bool QCefBrowserHandlerBase::DispatchNotifyRequest(CefRefPtr<CefBrowser> browser
                 varList.append(QVariant());
             }break;
             default: {
-                TRACEE("index; %d, type: %d", i, messageArguments->GetType(i));
+                //TRACEE("index; %d, type: %d", i, messageArguments->GetType(i));
                 Q_ASSERT(false);
             }break;
             }
@@ -462,7 +460,7 @@ bool QCefBrowserHandlerBase::DispatchNotifyRequest(CefRefPtr<CefBrowser> browser
         return true;
     } else if (messageName == QCEF_RETRIEVEPROPERTY) {
         if (messageArguments->GetSize() != 3) {
-            TRACEE("QCEF_RETRIEVEPROPERTY argument size mismatch !");
+            //TRACEE("QCEF_RETRIEVEPROPERTY argument size mismatch !");
             return false;
         }
         int messageBrowserId = QString::fromStdString(messageArguments->GetString(0).ToString()).toInt();
@@ -481,7 +479,7 @@ bool QCefBrowserHandlerBase::DispatchNotifyRequest(CefRefPtr<CefBrowser> browser
         return bOk;
     } else if (messageName == QCEF_SETPROPERTY) {
         if (messageArguments->GetSize() != 4) {
-            TRACEE("QCEF_SETPROPERTY argument size mismatch !");
+            //TRACEE("QCEF_SETPROPERTY argument size mismatch !");
             return false;
         }
         int messageBrowserId = QString::fromStdWString(messageArguments->GetString(0)).toInt();

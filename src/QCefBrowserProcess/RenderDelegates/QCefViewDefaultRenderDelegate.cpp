@@ -8,7 +8,6 @@
 #include "QCefViewDefaultRenderDelegate.h"
 #include "QCefClient.h"
 #include "QCefJavaScriptBinder.h"
-#include "tracer.h"
 #pragma endregion project_headers
 
 namespace QCefViewDefaultRenderDelegate {
@@ -76,7 +75,7 @@ namespace QCefViewDefaultRenderDelegate {
             CefProcessId source_process,
             CefRefPtr<CefProcessMessage> message)
     {
-        TRACET();
+        //TRACET();
         CefString messageName = message->GetName();
         if (messageName == QCEF_INVOKENGLCALLBACK) {
             CefRefPtr<CefListValue> messageArguments = message->GetArgumentList();
@@ -90,7 +89,7 @@ namespace QCefViewDefaultRenderDelegate {
             QString strSignature;
             strSignature = QString::fromStdWString(messageArguments->GetString(idx++).ToWString());
             auto sigList = strSignature.split(".");
-            if (sigList.size() != SIGNATURE_VALID_PARTS_COUNT)
+            if (sigList.size() != QCEF_SIGNATURE_VALID_PARTS_COUNT)
                 return false;
             int browserId = sigList[0].toInt();
             int64 frameId = sigList[1].toLongLong();
@@ -107,7 +106,7 @@ namespace QCefViewDefaultRenderDelegate {
             if (it != frame_id_to_client_map_.end()) {
                 it->second->invokeCallBack(strSignature, newArguments);
             } else {
-                TRACEE("QCEF_INVOKENGLCALLBACK can't find QCefClient by id: %ld", frameId);
+                //TRACEE("QCEF_INVOKENGLCALLBACK can't find QCefClient by id: %ld", frameId);
             }
         } else if (messageName == QCEF_CLEARNGLCALLBACKS) {
             CefRefPtr<CefListValue> messageArguments = message->GetArgumentList();
@@ -136,7 +135,7 @@ namespace QCefViewDefaultRenderDelegate {
             QStringList sigList = strSignature.split(";", QString::SkipEmptyParts);
             for (const auto& callbackSig : sigList) {
                 auto sigParts = callbackSig.split(".");
-                if (sigParts.size() != SIGNATURE_VALID_PARTS_COUNT)
+                if (sigParts.size() != QCEF_SIGNATURE_VALID_PARTS_COUNT)
                     continue;
                 int browserId = sigParts[0].toInt();
                 int64 frameId = sigParts[1].toLongLong();
@@ -154,7 +153,7 @@ namespace QCefViewDefaultRenderDelegate {
                 if (it != frame_id_to_client_map_.end()) {
                     it->second->clearFunctionCallbacks(sigs);
                 } else {
-                    TRACEE("QCEF_CLEARNGLCALLBACKS can't find QCefClient by id: %ld", frameId);
+                    //TRACEE("QCEF_CLEARNGLCALLBACKS can't find QCefClient by id: %ld", frameId);
                 }
             }
         }

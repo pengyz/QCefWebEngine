@@ -3,7 +3,6 @@
 #include <QCefProtocol.h>
 
 #include "CCefSetting.h"
-#include "include/storage.h"
 
 
 CefString CCefSetting::browser_sub_process_path;
@@ -51,7 +50,7 @@ CCefSetting::CCefSetting()
     QDir ExeDir = QDir::current();
     QDir appDataDir(strAppData);
     QString strCacheDir, strBackgroundColor, strBrowserHelperName, strLogFileName;
-    if (!QLocalStorage::get()->HasLoaded("browser")) {
+    /*if (!QLocalStorage::get()->HasLoaded("browser")) {
         QString strBrowserConfigFilePath = QDir::current().absoluteFilePath("Config/browser.json");
         QLocalStorage::get()->Load(QLocalStorage::eStorage_Json, strBrowserConfigFilePath);
     }
@@ -62,10 +61,10 @@ CCefSetting::CCefSetting()
     QLocalStorage::get()->GetInteger("browser.devConfig", "enable", debug_enabled);
     QLocalStorage::get()->GetInteger("browser.devConfig", "port", remote_debugging_port);
     QLocalStorage::get()->GetInteger("browser.devConfig", "width", devToolWidth);
-    QLocalStorage::get()->GetInteger("browser.devConfig", "height", devToolHeight);
+    QLocalStorage::get()->GetInteger("browser.devConfig", "height", devToolHeight);*/
 
 
-    QString strExePath = ExeDir.filePath(strBrowserHelperName.isEmpty() ? RENDER_PROCESS_NAME : strBrowserHelperName);
+    QString strExePath = ExeDir.filePath(RENDER_PROCESS_NAME);
     browser_sub_process_path.FromWString(QDir::toNativeSeparators(strExePath).toStdWString());
 
     QString strResPath = ExeDir.filePath(RESOURCE_DIRECTORY_NAME);

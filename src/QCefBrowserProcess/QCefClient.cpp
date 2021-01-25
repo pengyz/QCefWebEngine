@@ -3,8 +3,6 @@
 #include "QCefJavaScriptBinder.h"
 #pragma endregion projet_headers
 
-#include "tracer.h"
-
 //////////////////////////////////////////////////////////////////////////
 
 QCefClient::QCefClient(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame)
@@ -26,7 +24,7 @@ QCefClient::QCefClient(CefRefPtr<CefBrowser> browser, CefRefPtr<CefFrame> frame)
 
 QCefClient::~QCefClient()
 {
-    TRACED("called to release all !");
+    //TRACED("called to release all !");
     delete jsEnv_;
     jsEnv_ = nullptr;
 }

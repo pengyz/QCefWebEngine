@@ -3,17 +3,25 @@ project(${QCEF_CORE_DLL})
 INCLUDE(GenerateExportHeader)
 
 
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP "Generated Files")
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
+set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP "Generated Files")
+set_property(GLOBAL PROPERTY AUTOMOC_SOURCE_GROUP "Generated Files")
+set_property(GLOBAL PROPERTY AUTORCC_SOURCE_GROUP "Generated Files")
+
+set(CMAKE_CURRENT_BINARY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/Generated Files")
+
 find_package(Qt5 COMPONENTS Core GUI Widgets Sql REQUIRED)
 
 SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${QCEF_VIEW_SDK_LIB_OUT})
 SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${QCEF_VIEW_SDK_LIB_OUT})
 
 include_directories(
-  # ${CMAKE_SOURCE_DIR}/third_party/npl-shm/
   ${CMAKE_SOURCE_DIR}
+  ${CMAKE_SOURCE_DIR}/src/QCefProto
 )
 
 file(GLOB_RECURSE _SRC_FILES
@@ -43,7 +51,7 @@ add_library(${PROJECT_NAME} SHARED
   ${_RES_FILES}
   ${WRAP_MOC_SOURCES}
 )
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER QCefWebEngine)
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER ${QCEF_FOLDER_NAME})
 
 
 if (OS_WINDOWS)
@@ -55,12 +63,11 @@ if (OS_WINDOWS)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    Qt5::Core
     ${CEF_DLL_WRAPPER}
     ${CEF_LIB_FILE}
-    # NglBase
+    Qt5::Core
+    Qt5::Gui
     Opengl32
-	# npl-shm
 )
 GENERATE_EXPORT_HEADER(${PROJECT_NAME})
 file(GLOB _EXPORT_HEADERS_${PROJECT_NAME} "public/*")

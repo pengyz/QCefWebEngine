@@ -1,13 +1,17 @@
-cmake_minimum_required(VERSION 3.4.1)
-project(${QCEF_BROWSER_DLL})
+project(${QCEF_BROWSER_EXE})
 
 set_property(GLOBAL PROPERTY AUTOGEN_SOURCE_GROUP "Generated Files")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 find_package(Qt5 COMPONENTS Core REQUIRED)
+
+include_directories(
+    ${CMAKE_SOURCE_DIR}/src/QCefProto
+)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CXX_STANDARD_REQUIRED)
@@ -26,11 +30,17 @@ if (OS_WINDOWS)
   source_group("Resources" ${_RES_FILES})
 endif()
 
-add_library(${PROJECT_NAME} SHARED
+add_executable(${PROJECT_NAME} WIN32
     ${_SRC_FILES}
     ${_RES_FILES}
+    ${PROJECT_NAME}.manifest
 )
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER QCefWebEngine)
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+	UNICODE
+	_UNICODE
+)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER ${QCEF_FOLDER_NAME})
 
 if (OS_WINDOWS)
   target_compile_definitions(${PROJECT_NAME} PRIVATE
@@ -43,5 +53,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   ${CEF_DLL_WRAPPER}
   ${CEF_LIB_FILE}
   Qt5::Core
-  NglBase
 )

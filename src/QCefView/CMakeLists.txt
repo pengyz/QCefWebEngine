@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4.1)
+﻿cmake_minimum_required(VERSION 3.4.1)
 project(${QCEF_VIEW_DLL})
 INCLUDE(GenerateExportHeader)
 
@@ -13,8 +13,9 @@ SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${QCEF_VIEW_SDK_LIB_OUT})
 
 include_directories(
   ${CMAKE_SOURCE_DIR}/
+  ${CMAKE_SOURCE_DIR}/include/
   "${CMAKE_CURRENT_SOURCE_DIR}/Generated Files"
-   ${CMAKE_SOURCE_DIR}/third_party/npl-shm/
+  ${CMAKE_SOURCE_DIR}/src/QCefProto
 )
 
 file(GLOB_RECURSE _SRC_FILES
@@ -41,7 +42,7 @@ add_library(${PROJECT_NAME} SHARED
   ${_RES_FILES}
 )
 GENERATE_EXPORT_HEADER(${PROJECT_NAME})
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER QCefWebEngine)
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER ${QCEF_FOLDER_NAME})
 
 
 if (OS_WINDOWS)
@@ -56,13 +57,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt5::Core
     Qt5::Gui 
     Qt5::Widgets
-    NglBase
     QCefCore
     ${CEF_DLL_WRAPPER}
     ${CEF_LIB_FILE}
 )
-
-# add_dependencies(${PROJECT_NAME} NglBrowser)
+add_dependencies(${PROJECT_NAME} ${QCEF_BROWSER_EXE})
 
 file(GLOB _EXPORT_HEADERS_${PROJECT_NAME} "public/*")
 

@@ -8,4 +8,4 @@ add_library(${PROJECT_NAME}
   QCefProtocol.h
   QCefProtocol.cpp
 )
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER QCefWebEngine)
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER ${QCEF_FOLDER_NAME})

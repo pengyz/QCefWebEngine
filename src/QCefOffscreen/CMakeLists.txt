@@ -23,4 +23,4 @@ add_library(${PROJECT_NAME} SHARED
 	${_HEADER_FILES}
 )
 
-set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER QCefWebEngine)
+set_target_properties(${PROJECT_NAME} PROPERTIES FOLDER ${QCEF_FOLDER_NAME})

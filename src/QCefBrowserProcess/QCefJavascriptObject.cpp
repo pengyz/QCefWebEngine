@@ -1,6 +1,5 @@
 #include "QCefJavascriptObject.h"
 #include "QCefJavaScriptEnvironment.h"
-#include "include/tracer.h"
 #include <QCefProtocol.h>
 #include <QUuid>
 #include <QJsonObject>
@@ -15,7 +14,7 @@ QCefJavaScriptObject::QCefJavaScriptObject(JavaScriptMetaObject metaObj, CefRefP
 
 QCefJavaScriptObject::~QCefJavaScriptObject()
 {
-    TRACED("called to clear all !!!");
+    //TRACED("called to clear all !!!");
     m_functionMap.clear();
 }
 
@@ -123,7 +122,7 @@ bool QCefJavaScriptObject::updateDynamicProperty(const QString& registerName, co
         return false;
     if ((propInfo.typeName == "QString" && !value->IsString()) || (propInfo.typeName == "int" && !value->IsInt()) ||
         (propInfo.typeName == "double" && !value->IsDouble()) || (propInfo.typeName == "bool" && !value->IsBool())) {
-        TRACEE("property typeName is: %s but value type mismatch !", qPrintable(propInfo.typeName));
+        //TRACEE("property typeName is: %s but value type mismatch !", qPrintable(propInfo.typeName));
         return false;
     }
     //发送更新消息
@@ -145,7 +144,7 @@ bool QCefJavaScriptObject::updateDynamicProperty(const QString& registerName, co
     } else if (value->IsBool()) {
         strValue = QString::number(value->GetBoolValue());
     } else {
-        TRACEE("property type not allowed !");
+        //TRACEE("property type not allowed !");
         return false;
     }
     args->SetString(idx++, strValue.toStdWString());
@@ -172,10 +171,10 @@ CefRefPtr<CefV8Value> QCefJavaScriptObject::genV8PropertyValue(const QVariant& v
 
 bool QCefJavaScriptObject::addNewV8ValueDirectly(const JavaScriptMetaProperty& propInfo, const CefRefPtr<CefV8Value> v8Value)
 {
-    TRACET();
+    //TRACET();
     JSMetaObjectPairInfo pair = m_pJsEnv->getMetaObjectInfo(m_registerName);
     if (!pair.second || !pair.second->IsValid() || pair.second->IsNull()) {
-        TRACEE("get getMetaObjectInfo failed !");
+        //TRACEE("get getMetaObjectInfo failed !");
         return false;
     }
     //注册为允许读写的属性
@@ -208,7 +207,7 @@ bool QCefJavaScriptObject::updateMetaProperty(JavaScriptMetaProperty* pProperty,
 
 bool QCefJavaScriptObject::Get(const CefString& name, const CefRefPtr<CefV8Value> object, CefRefPtr<CefV8Value>& retval, CefString& exception)
 {
-    TRACED("name is: %s", qPrintable(QString::fromStdWString(name)));
+    //TRACED("name is: %s", qPrintable(QString::fromStdWString(name)));
     auto pos = std::find_if(m_metaObject.properties.begin(), m_metaObject.properties.end(), [=](const JavaScriptMetaProperty& prop) {
         if (prop.name == QString::fromStdWString(name))
             return true;
@@ -232,7 +231,7 @@ bool QCefJavaScriptObject::Get(const CefString& name, const CefRefPtr<CefV8Value
 
 bool QCefJavaScriptObject::Set(const CefString& name, const CefRefPtr<CefV8Value> object, const CefRefPtr<CefV8Value> value, CefString& exception)
 {
-    TRACED("name is: %s", qPrintable(QString::fromStdWString(name)));
+    //TRACED("name is: %s", qPrintable(QString::fromStdWString(name)));
     bool bOk = false;
     if (!value->IsValid()) {
         exception = "value is invalid!";
@@ -284,8 +283,8 @@ QCefFunctionObject::~QCefFunctionObject()
 bool QCefFunctionObject::Execute(const CefString& name, CefRefPtr<CefV8Value> object,
     const CefV8ValueList& arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
 {
-    TRACED("name is: %s, className is: %s, signature is: %s", qPrintable(QString::fromStdWString(name)),
-        qPrintable(m_metaMethod.className), qPrintable(m_metaMethod.signature));
+    /*TRACED("name is: %s, className is: %s, signature is: %s", qPrintable(QString::fromStdWString(name)),
+        qPrintable(m_metaMethod.className), qPrintable(m_metaMethod.signature));*/
     //create invokeNglMethod message then send to browser process.
     CefRefPtr<CefProcessMessage> msg = CefProcessMessage::Create(QCEF_INVOKENGLMETHOD);
 
@@ -300,7 +299,7 @@ bool QCefFunctionObject::Execute(const CefString& name, CefRefPtr<CefV8Value> ob
     args->SetString(idx++, m_metaMethod.className.toStdWString());
     args->SetString(idx++, name);
     args->SetString(idx++, m_metaMethod.signature.toStdWString());
-    TRACED("class name is: %s, signature is: %s", qPrintable(m_metaMethod.className), qPrintable(m_metaMethod.signature));
+    //TRACED("class name is: %s, signature is: %s", qPrintable(m_metaMethod.className), qPrintable(m_metaMethod.signature));
 
     //check param count
     int acceptParamCount = m_metaMethod.params.size();
@@ -345,7 +344,7 @@ bool QCefFunctionObject::Execute(const CefString& name, CefRefPtr<CefV8Value> ob
 
             CefString callbackSignature = callbackSig.toStdWString();
             m_callbacksMap.insert(callbackSignature, functionCallback);
-            TRACED("callback found at: %d, signature is: %s", i, qPrintable(callbackSig));
+            //TRACED("callback found at: %d, signature is: %s", i, qPrintable(callbackSig));
         } else {
             args->SetNull(idx++);
         }
@@ -369,7 +368,7 @@ bool QCefFunctionObject::Execute(const CefString& name, CefRefPtr<CefV8Value> ob
         }
         callbackSignatures = QJsonDocument(jsonObj).toJson(QJsonDocument::Compact);
         args->SetString(iSigIndex, callbackSignatures.toStdWString());
-        TRACED("json callback signature is: %s", qPrintable(callbackSignatures));
+        //TRACED("json callback signature is: %s", qPrintable(callbackSignatures));
     }
 
     if (m_browser && m_frame) {
@@ -384,7 +383,7 @@ bool QCefFunctionObject::Execute(const CefString& name, CefRefPtr<CefV8Value> ob
 
 bool QCefFunctionObject::ExecuteCallback(const CefString& signature, CefRefPtr<CefV8Value> object, CefRefPtr<CefListValue> arguments, CefRefPtr<CefV8Value>& retval, CefString& exception)
 {
-    TRACED("signature is: %s", qPrintable(QString::fromStdWString(signature)));
+    //TRACED("signature is: %s", qPrintable(QString::fromStdWString(signature)));
     if (!m_callbacksMap.contains(signature)) {
         exception = "can't get callback !";
         return false;
@@ -414,7 +413,7 @@ bool QCefFunctionObject::ExecuteCallback(const CefString& signature, CefRefPtr<C
                 memset(buf, 0, size);
                 auto readSize = binVal->GetData(buf, size, 0);
                 if (readSize != size) {
-                    TRACEE("GetData want %d, but got %d", size, readSize);
+                    //TRACEE("GetData want %d, but got %d", size, readSize);
                     size = 0;
                 }
                 v8Arguments[i] = CefV8Value::CreateArrayBuffer(buf, size, new ReleaseCallback());
@@ -437,13 +436,13 @@ bool QCefFunctionObject::RemoveCallback(const CefString& signature)
         m_callbacksMap.take(signature);
         bRet = true;
     }
-    TRACED("after remove, callback count is: %d", m_callbacksMap.size());
+    //TRACED("after remove, callback count is: %d", m_callbacksMap.size());
     return bRet;
 }
 
 CefRefPtr<CefV8Value> QCefFunctionObject::readSynchronizeValue(const QString& retTypeSignature, int retType)
 {
-    TRACET();
+    //TRACET();
     CefRefPtr<CefV8Value> retval = CefV8Value::CreateUndefined();
     //check if return value type valid
     if (retType != QMetaType::Int && retType != QMetaType::UInt && retType != QMetaType::Bool &&
@@ -505,7 +504,7 @@ CefRefPtr<CefV8Value> QCefFunctionObject::readSynchronizeValue(const QString& re
             val = QString::fromUtf8(buffer).toStdWString();
             delete[] buffer;
         } else {
-            TRACEE("string length is too long !!!!");
+            //TRACEE("string length is too long !!!!");
         }
         retval = CefV8Value::CreateString(val);
     }break;

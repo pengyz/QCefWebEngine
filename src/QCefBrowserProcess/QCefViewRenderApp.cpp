@@ -12,7 +12,6 @@
 #include "QCefViewRenderApp.h"
 #include "RenderDelegates/QCefViewDefaultRenderDelegate.h"
 #include "RenderDelegates/QCefSurfaceRenderDelegate.h"
-#include "tracer.h"
 #pragma endregion project_headers
 
 
@@ -34,7 +33,7 @@ void QCefViewRenderApp::OnBeforeCommandLineProcessing(const CefString& process_t
     if (!logLevel.empty()) {
         int iLogLevel = QString::fromStdWString(logLevel).toInt();
         // set log level
-        Tracer::Initial(GetModuleHandle(NULL), iLogLevel, Tracer::TraceMode::AllTrace);
+        //Tracer::Initial(GetModuleHandle(NULL), iLogLevel, Tracer::TraceMode::AllTrace);
     }
     //read and set parentId as the js binding shared memory name key
     CefString parentId = command_line->GetSwitchValue(QCEF_PARENT_ID_NAME);

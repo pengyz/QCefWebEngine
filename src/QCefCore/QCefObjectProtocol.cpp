@@ -1,7 +1,7 @@
 #include "QCefObjectProtocol.h"
 #include "QCefProtocol.h"
-#include "tracer.h"
 
+#include <qt_windows.h>
 #include <QMetaMethod>
 #include <QMetaProperty>
 #include <QJsonDocument>
@@ -33,19 +33,19 @@ bool QCefObjectProtocol::init()
 {
     m_sharedMemory->setKey(QString(QCEF_JSBRIDGE_NAME).arg(GetCurrentProcessId()));
     if (!m_sharedMemory->create(SHARED_MEMORY_SIZE, QSharedMemory::ReadWrite)) {
-        TRACEE("init QCefJavaScriptObjectBridge shared memory create failed! %s", qPrintable(m_sharedMemory->errorString()));
+        //TRACEE("init QCefJavaScriptObjectBridge shared memory create failed! %s", qPrintable(m_sharedMemory->errorString()));
         return false;
     }
     if (m_sharedMemory->error() == QSharedMemory::NoError) {
         m_firstInit = true;
     } else if (m_sharedMemory->error() != QSharedMemory::AlreadyExists) {
         m_firstInit = false;
-        TRACEE("init QCefJavaScriptObjectBridge shared memory attach failed! %s", qPrintable(m_sharedMemory->errorString()));
+        //TRACEE("init QCefJavaScriptObjectBridge shared memory attach failed! %s", qPrintable(m_sharedMemory->errorString()));
         return false;
     } else {
         //use read write mode for the first init
         if (!m_sharedMemory->attach(QSharedMemory::ReadWrite)) {
-            TRACEE("init QCefJavaScriptObjectBridge shared memory attach failed! %s", qPrintable(m_sharedMemory->errorString()));
+            //TRACEE("init QCefJavaScriptObjectBridge shared memory attach failed! %s", qPrintable(m_sharedMemory->errorString()));
             return false;
         }
     }
@@ -65,7 +65,7 @@ QString QCefObjectProtocol::readJsObjectRegisterInfo()
 bool QCefObjectProtocol::writeJsObjectRegisterInfo(const QString& jsonInfo)
 {
     if (!m_firstInit) {
-        TRACED("JSBinding can not write beacuse not first init");
+        //TRACED("JSBinding can not write beacuse not first init");
         return false;
     }
     QByteArray jsonByts = jsonInfo.toUtf8();
@@ -88,7 +88,7 @@ bool QCefObjectProtocol::registerJavaScriptHandlerObject(const QString& register
         jsonDoc = QJsonDocument::fromJson(jsonInfo.toUtf8(), &jsonError);
         Q_ASSERT_X(jsonError.error == QJsonParseError::NoError, __FUNCTION__, "parse json failed!");
         if (jsonError.error != QJsonParseError::NoError) {
-            TRACEE("parse json failed ! %s", qPrintable(jsonError.errorString()));
+            //TRACEE("parse json failed ! %s", qPrintable(jsonError.errorString()));
             return false;
         }
     }
@@ -130,8 +130,9 @@ bool QCefObjectProtocol::registerJavaScriptHandlerObject(const QString& register
             if (j == 0) {
                 Q_ASSERT_X(paramTypeList[j] == "JavaScriptCallbacksCollection", "check",
                     "first param type must be JavaScriptCallbacksCollection");
-                if (paramTypeList[j] != "JavaScriptCallbacksCollection")
-                    TRACEE("method: %s not valid !", metaMethod.name().constData());
+                if (paramTypeList[j] != "JavaScriptCallbacksCollection") {
+                    //TRACEE("method: %s not valid !", metaMethod.name().constData());
+                }
             }
             paramData.insert("name", QString::fromUtf8(paramNameList[j]));
             paramData.insert("type", QString::fromUtf8(paramTypeList[j]));
@@ -182,7 +183,7 @@ bool QCefObjectProtocol::registerJavaScriptHandlerObject(const QString& register
     jsonArray.append(registerObjInfo);
     jsonDoc.setArray(jsonArray);
     QString jsonStr = jsonDoc.toJson(QJsonDocument::Compact);
-    TRACED("jsonStr is: %s", qPrintable(jsonStr));
+    //TRACED("jsonStr is: %s", qPrintable(jsonStr));
     writeJsObjectRegisterInfo(jsonStr); //write to shared memory
     return true;
 }

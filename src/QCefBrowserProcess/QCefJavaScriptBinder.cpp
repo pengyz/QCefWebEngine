@@ -2,7 +2,6 @@
 #include "QCefProtocol.h"
 #include "QCefClient.h"
 #include "QCefMetaObject.h"
-#include "tracer.h"
 
 #include <QJsonDocument>
 #include <QJsonValue>
@@ -20,7 +19,7 @@ QCefJavaScriptBinder* QCefJavaScriptBinder::get()
 
 bool QCefJavaScriptBinder::init()
 {
-    TRACET();
+    //TRACET();
     if (!m_sharedMemory) {
         m_sharedMemory = new QSharedMemory(this);
         Q_ASSERT(!m_parentId.isEmpty());
@@ -28,8 +27,8 @@ bool QCefJavaScriptBinder::init()
     }
     if (!m_sharedMemory->isAttached()) {
         if (!m_sharedMemory->attach(QSharedMemory::AccessMode::ReadOnly)) {
-            TRACEE("attach name: %s failed: %s", qPrintable(QString(QCEF_JSBRIDGE_NAME).arg(m_parentId)),
-                qPrintable(m_sharedMemory->errorString()));
+            /*TRACEE("attach name: %s failed: %s", qPrintable(QString(QCEF_JSBRIDGE_NAME).arg(m_parentId)),
+                qPrintable(m_sharedMemory->errorString()));*/
             return false;
         }
     }
@@ -46,7 +45,7 @@ bool QCefJavaScriptBinder::initRegisterObjectsData(const QString& jsonData)
     QJsonParseError jsonError;
     QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData.toUtf8().data(), &jsonError);
     if (jsonError.error != QJsonParseError::NoError) {
-        TRACEE("json parse error: %s", qPrintable(jsonError.errorString()));
+        //TRACEE("json parse error: %s", qPrintable(jsonError.errorString()));
         return false;
     }
 
@@ -131,7 +130,7 @@ void* QCefJavaScriptBinder::bindAllObjects(CefRefPtr<CefV8Value> parentObj, CefR
         if (regNameKey.isEmpty())
             continue;
         if (!m_javaScriptMetaObjectMap.contains(regNameKey)) {
-            TRACEE("register name for %s not found !", qPrintable(regNameKey));
+            //TRACEE("register name for %s not found !", qPrintable(regNameKey));
             continue;
         }
         JavaScriptMetaObject& metaInfo = m_javaScriptMetaObjectMap[regNameKey];

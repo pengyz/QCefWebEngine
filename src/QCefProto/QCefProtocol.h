@@ -58,7 +58,7 @@
  * @brief 浏览器进程文件名
  * @author Alex.peng
  */
-#define RENDER_PROCESS_NAME "Browser.exe"
+#define RENDER_PROCESS_NAME "QCefBrowserProcess.exe"
 
 
 /**
@@ -115,5 +115,9 @@
 #define QCEF_SURFACE_TYPE_NAME          "surfaceType"
 #define QCEF_SURFACE_TYPE_VALUE_OVERLAY "Overlay"
 #define QCEF_SURFACE_TYPE_VALUE_SDK     "SDK"
+
+
+#define QCEF_SIGNATURE_VALID_PARTS_COUNT         6
+
 
 #endif

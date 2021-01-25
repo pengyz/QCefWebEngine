@@ -3,7 +3,6 @@
 
 #include "QCefObjectProtocol.h"
 #include "QCefProtocol.h"
-#include "include/tracer.h"
 #include "public/QCefCoreManagerBase.h"
 
 #include <QMetaObject>
@@ -22,56 +21,57 @@ QCefJavaScriptEngine* QCefJavaScriptEngine::m_instance = nullptr;
 
 bool QCefJavaScriptEngine::writeSynchronizeValueInner(const QString returnTypeSignature, void* value, int len)
 {
-    TRACET();
+    //TRACET();
     QString pipeName = QString("\\\\.\\pipe\\%1").arg(returnTypeSignature);
     HANDLE hPipe = [pipeName]()->HANDLE {
         while (1) {
             HANDLE hPipe = CreateFile(pipeName.toStdWString().c_str(), GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, 0, NULL);
             if (hPipe != INVALID_HANDLE_VALUE) {
-                TRACED("open pipe success!");
+                //TRACED("open pipe success!");
                 return hPipe;
             }
             int nErrorId = GetLastError();
             if (nErrorId != ERROR_PIPE_BUSY) {
-                TRACEE("client createfile error: %d", nErrorId);
+                //TRACEE("client createfile error: %d", nErrorId);
                 return NULL;
             }
 
-            TRACED("WaitNamedPipeA ...");
+            //TRACED("WaitNamedPipeA ...");
             if (!WaitNamedPipe(pipeName.toStdWString().c_str(), 10000)) {
-                if (GetLastError() == ERROR_SEM_TIMEOUT)
-                    TRACEE("WaitNamePipeA timeOut!");
-                else {
-                    TRACEE("WaitNamePipeA Failed: %d", GetLastError());
+                if (GetLastError() == ERROR_SEM_TIMEOUT) {
+                    //TRACEE("WaitNamePipeA timeOut!");
+                } else {
+                    //TRACEE("WaitNamePipeA Failed: %d", GetLastError());
                     break;
                 }
             } else {
-                TRACED("waitNamedPipe success!");
+                //TRACED("waitNamedPipe success!");
                 continue;
             }
         }
         return NULL;
     }();
     if (hPipe == INVALID_HANDLE_VALUE || !hPipe) {
-        TRACEE("connect server failed!");
+        //TRACEE("connect server failed!");
         return false;
     }
     DWORD dwMode = PIPE_READMODE_MESSAGE;
     if (!SetNamedPipeHandleState(hPipe, &dwMode, NULL, NULL)) {
-        TRACEE("SetNamedPipeHandleState failed !");
+        //TRACEE("SetNamedPipeHandleState failed !");
         return false;
     }
     DWORD dwWritten = 0;
     if (!WriteFile(hPipe, value, len, &dwWritten, NULL)) {
         int nLastError = ::GetLastError();
-        if (ERROR_NO_DATA == nLastError)
-            TRACEE("pipi already closeed !");
-        else
-            TRACEE("client writefile failed: %d", nLastError);
+        if (ERROR_NO_DATA == nLastError) {
+            //TRACEE("pipi already closeed !");
+        } else {
+            //TRACEE("client writefile failed: %d", nLastError);
+        }
         return false;
     }
     if (dwWritten != len) {
-        TRACEE("client writefile failed dwWritten != len");
+        //TRACEE("client writefile failed dwWritten != len");
         return false;
     }
     FlushFileBuffers(hPipe);
@@ -107,7 +107,7 @@ bool QCefJavaScriptEngine::retieveProperty(const QString& propertySignature, QVa
     QVariant value = metaProp.read(pTarget);
     QVariant::Type targetType = QVariant::nameToType(qUtf8Printable(propType));
     if (value.type() != targetType) {
-        TRACEE("type mismatch !!!");
+        //TRACEE("type mismatch !!!");
         return false;
     }
     propValue = value;
@@ -284,7 +284,7 @@ bool QCefJavaScriptEngine::inovkeMethod(int browserId, const QVariantList& messa
 
     int messageBrowserId = QString::fromStdString(messageArguments[idx++].toString().toStdString()).toInt();
     qint64 frameId = QString::fromStdString(messageArguments[idx++].toString().toStdString()).toLongLong();
-    TRACED("browserId is: %d, messageBrowserId is: %d, frameId is: %ld", browserId, messageBrowserId, frameId);
+    //TRACED("browserId is: %d, messageBrowserId is: %d, frameId is: %ld", browserId, messageBrowserId, frameId);
     //not current browser, ignore call
     if (messageBrowserId != browserId) {
         return false;
@@ -311,20 +311,20 @@ bool QCefJavaScriptEngine::inovkeMethod(int browserId, const QVariantList& messa
 
     //get meta object
     if (!m_registeredMetaObjectMap.contains(className)) {
-        TRACEE("meta method for name: %s not found !", qPrintable(className));
+        //TRACEE("meta method for name: %s not found !", qPrintable(className));
         return false;
     }
     const QMetaObject* metaObj = m_registeredMetaObjectMap[className];
     int iMethod = metaObj->indexOfMethod(metaObj->normalizedSignature(methodSignature.toStdString().c_str()).toStdString().c_str());
     if (iMethod == -1) {
-        TRACEE("method %s index not found !", qPrintable(method));
+        //TRACEE("method %s index not found !", qPrintable(method));
         return false;
     }
     QMetaMethod metaMethod = m_registeredMetaObjectMap[className]->method(iMethod);
 
     //get calling object
     if (!m_jsObjectBindingMap.contains(className)) {
-        TRACEE("class name: %s not found !", qPrintable(className));
+        //TRACEE("class name: %s not found !", qPrintable(className));
         return false;
     }
     QObject* obj = m_jsObjectBindingMap[className];
