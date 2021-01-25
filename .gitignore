@@ -11,20 +11,18 @@
 *.gch
 *.pch
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
 # Fortran module files
 *.mod
 *.smod
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# Generated directory
+/bin/
+/build/
+/.vs/
+/[D/d]ebug/
+/[R/r]elease/
+/third/cef_binary/
+
 
 # Executables
 *.exe
