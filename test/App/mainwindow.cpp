@@ -1,7 +1,7 @@
 ﻿#include "mainwindow.h"
 #include "jsobjects.h"
 
-#include "include/QCefCoreManager.h"
+#include "include/QCefWebEngine.h"
 #include "include/QCefJavaScriptEngine.h"
 
 #include <QHBoxLayout>
@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget* parent/* = nullptr*/)
     setupUi(this);
     this->setMinimumSize(800, 600);
     initJavaScriptEnvironment();
-    connect(QCefCoreManager::get(), &QCefCoreManager::sig_allBrowserClosed, this, [this]() {
+    connect(QCefWebEngine::get(), &QCefWebEngine::sig_allBrowserClosed, this, [this]() {
         m_allClosed = true;
         close();
     });
@@ -30,7 +30,7 @@ void MainWindow::setupUi(QWidget* parent)
 void MainWindow::closeEvent(QCloseEvent* evt)
 {
     if (!m_allClosed) {
-        QCefCoreManager::get()->closeAllBrowsers(true);
+        QCefWebEngine::get()->closeAllBrowsers(true);
         evt->accept();
     } else {
         qApp->quit();

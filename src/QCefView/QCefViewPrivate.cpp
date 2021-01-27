@@ -6,9 +6,9 @@
 
 #include "include/CefCoreBrowser.h"
 #include "QCefViewPrivate.h"
-#include "../QCefCore/CefViewBrowserApp/QCefBrowserHandlerBase.h"
+#include "CefViewBrowserApp/QCefBrowserHandlerBase.h"
 #include "CCefWindowHook.h"
-#include "public/QCefCoreManager.h"
+#include "public/QCefWebEngine.h"
 
 
 
@@ -28,18 +28,18 @@ QCefViewPrivate::QCefViewPrivate(QWidget* webViewWidget, const QString& url, con
         strUuid = strUuid.replace("-", "");
         webId_ = QString("WEB_%1").arg(strUuid);
     }
-    QCefCoreManager::get()->createBrowser(webId_, url, "", (HWND)webViewWidget->winId(), {});
-    connect(QCefCoreManager::get(), &QCefCoreManager::sig_notifyBrowserWindowIntergrate, this, &QCefViewPrivate::onBrowserWindowIntergrate);
-    connect(QCefCoreManager::get(), &QCefCoreManager::sig_loadingStateChanged, this, &QCefViewPrivate::onLoadingStateChanged);
-    connect(QCefCoreManager::get(), &QCefCoreManager::sig_loadStart, this, &QCefViewPrivate::onLoadStart);
-    connect(QCefCoreManager::get(), &QCefCoreManager::sig_loadEnd, this, &QCefViewPrivate::onLoadEnd);
-    connect(QCefCoreManager::get(), &QCefCoreManager::sig_loadError, this, &QCefViewPrivate::onLoadError);
-    connect(QCefCoreManager::get(), &QCefCoreManager::sig_notifyFullScreenModeChanged, this, &QCefViewPrivate::onFullScreenModeChanged);
+    QCefWebEngine::get()->createBrowser(webId_, url, "", (HWND)webViewWidget->winId(), {});
+    connect(QCefWebEngine::get(), &QCefWebEngine::sig_notifyBrowserWindowIntergrate, this, &QCefViewPrivate::onBrowserWindowIntergrate);
+    connect(QCefWebEngine::get(), &QCefWebEngine::sig_loadingStateChanged, this, &QCefViewPrivate::onLoadingStateChanged);
+    connect(QCefWebEngine::get(), &QCefWebEngine::sig_loadStart, this, &QCefViewPrivate::onLoadStart);
+    connect(QCefWebEngine::get(), &QCefWebEngine::sig_loadEnd, this, &QCefViewPrivate::onLoadEnd);
+    connect(QCefWebEngine::get(), &QCefWebEngine::sig_loadError, this, &QCefViewPrivate::onLoadError);
+    connect(QCefWebEngine::get(), &QCefWebEngine::sig_notifyFullScreenModeChanged, this, &QCefViewPrivate::onFullScreenModeChanged);
 }
 
 QCefViewPrivate::~QCefViewPrivate()
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         browserInfo->closeBrowser(true);
@@ -48,7 +48,7 @@ QCefViewPrivate::~QCefViewPrivate()
 
 WId QCefViewPrivate::getCefWinId()
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         return (WId)browserInfo->getBrowserWnd();
@@ -65,7 +65,7 @@ void QCefViewPrivate::onBrowserWindowIntergrate(const QString& webId, int browse
 
 void QCefViewPrivate::browserLoadUrl(const QString& url)
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         browserInfo->browserLoadUrl(url);
@@ -74,7 +74,7 @@ void QCefViewPrivate::browserLoadUrl(const QString& url)
 
 bool QCefViewPrivate::browserCanGoBack()
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         browserInfo->browserCanGoBack();
@@ -84,7 +84,7 @@ bool QCefViewPrivate::browserCanGoBack()
 
 bool QCefViewPrivate::browserCanGoForward()
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         browserInfo->browserCanGoForward();
@@ -94,7 +94,7 @@ bool QCefViewPrivate::browserCanGoForward()
 
 void QCefViewPrivate::browserGoBack()
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         browserInfo->browserGoBack();
@@ -103,7 +103,7 @@ void QCefViewPrivate::browserGoBack()
 
 void QCefViewPrivate::browserGoForward()
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         browserInfo->browserGoForward();
@@ -112,7 +112,7 @@ void QCefViewPrivate::browserGoForward()
 
 bool QCefViewPrivate::browserIsLoading()
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         browserInfo->browserIsLoading();
@@ -122,7 +122,7 @@ bool QCefViewPrivate::browserIsLoading()
 
 void QCefViewPrivate::browserReload()
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         browserInfo->browserReload();
@@ -131,7 +131,7 @@ void QCefViewPrivate::browserReload()
 
 void QCefViewPrivate::browserStopLoad()
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         browserInfo->browserStopLoad();
@@ -140,7 +140,7 @@ void QCefViewPrivate::browserStopLoad()
 
 QString QCefViewPrivate::getUrl()
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         return browserInfo->browserGetUrl();
@@ -150,7 +150,7 @@ QString QCefViewPrivate::getUrl()
 
 void QCefViewPrivate::notifyMoveOrResizeStarted()
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         browserInfo->notifyMoveOrResizeStarted();
@@ -166,7 +166,7 @@ void QCefViewPrivate::onToplevelWidgetMoveOrResize() { notifyMoveOrResizeStarted
 
 int QCefViewPrivate::getBrowserId()
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         return browserInfo->getBrowserId();
@@ -181,7 +181,7 @@ QString QCefViewPrivate::getWebId()
 
 void QCefViewPrivate::execJavaScript(const QString& javaScriptCode, const QString& scriptUrl, int startLine)
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (browserInfo) {
         LockCoreBrowser(browserInfo);
         browserInfo->execJavaScript(javaScriptCode, scriptUrl, startLine);
@@ -197,7 +197,7 @@ bool QCefViewPrivate::setInputEventHook()
 
 double QCefViewPrivate::getZoomLevel()
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (!browserInfo)
         return 0.0;
     LockCoreBrowser(browserInfo);
@@ -206,7 +206,7 @@ double QCefViewPrivate::getZoomLevel()
 
 void QCefViewPrivate::setZoomLevel(double level)
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (!browserInfo)
         return;
     LockCoreBrowser(browserInfo);
@@ -215,7 +215,7 @@ void QCefViewPrivate::setZoomLevel(double level)
 
 void QCefViewPrivate::onLoadingStateChanged(int browserId, bool isLoading, bool canGoBack, bool canGoForward)
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (!browserInfo)
         return;
     int currBrowserId = 0;
@@ -230,7 +230,7 @@ void QCefViewPrivate::onLoadingStateChanged(int browserId, bool isLoading, bool 
 
 void QCefViewPrivate::onLoadStart(int browserId)
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (!browserInfo)
         return;
     int currBrowserId = 0;
@@ -245,7 +245,7 @@ void QCefViewPrivate::onLoadStart(int browserId)
 
 void QCefViewPrivate::onLoadEnd(int browserId, int httpStatusCode)
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (!browserInfo)
         return;
     int currBrowserId = 0;
@@ -260,7 +260,7 @@ void QCefViewPrivate::onLoadEnd(int browserId, int httpStatusCode)
 
 void QCefViewPrivate::onLoadError(int browserId, int errorCode, QString url)
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (!browserInfo)
         return;
     int currBrowserId = 0;
@@ -275,7 +275,7 @@ void QCefViewPrivate::onLoadError(int browserId, int errorCode, QString url)
 
 void QCefViewPrivate::onFullScreenModeChanged(int browserId, bool fullscreen)
 {
-    auto browserInfo = QCefCoreManager::get()->getCoreBrowser(webId_);
+    auto browserInfo = QCefWebEngine::get()->getCoreBrowser(webId_);
     if (!browserInfo)
         return;
     int currBrowserId = 0;

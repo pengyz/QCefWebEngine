@@ -1,5 +1,5 @@
 #pragma once;
-#include "../QCefCore/QCefCoreManagerBaseImpl.h"
+#include "QCefCoreManagerBaseImpl.h"
 
 enum class HtmlSurfaceConsumerType;
 

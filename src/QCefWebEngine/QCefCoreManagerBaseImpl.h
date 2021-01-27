@@ -10,7 +10,7 @@
 #include <include/cef_app.h>
 #include "CefViewBrowserApp/QCefBrowserHandlerBase.h"
 #include "QCefCoreBrowserBase.h"
-#include "qcefcore_export.h"
+#include "qcefwebengine_export.h"
 
 enum class HtmlSurfaceConsumerType;
 
@@ -20,7 +20,7 @@ enum class HtmlSurfaceConsumerType;
  * 负责管理CEF库的初始化/释放 浏览器的创建，关闭，获取指定浏览器对象等
  * @author Alex.peng
  */
-class QCEFCORE_EXPORT QCefCoreManagerBaseImpl : public QObject {
+class QCEFWEBENGINE_EXPORT QCefCoreManagerBaseImpl : public QObject {
     Q_OBJECT
 public:
     QCefCoreManagerBaseImpl(QObject* parent = nullptr);

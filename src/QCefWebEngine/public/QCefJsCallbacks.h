@@ -1,6 +1,6 @@
 #pragma once;
 
-#include "qcefcore_export.h"
+#include "qcefwebengine_export.h"
 #include <QVariantList>
 #include <QString>
 #include <QMetaType>
@@ -11,7 +11,7 @@ bool getSignatureIdentifier(const QString& jsCallbackSignature, int& browerId, q
 QStringList getCallbackSignatureList(const QString& jsCallbackSignature);
 
 
-class QCEFCORE_EXPORT JavaScriptCallback {
+class QCEFWEBENGINE_EXPORT JavaScriptCallback {
 public:
     JavaScriptCallback(const QString& signature, class QCefCoreManagerBase* coreManager);
     JavaScriptCallback();
@@ -30,7 +30,7 @@ protected:
     qint64 m_frameId = 0;
 };
 
-class QCEFCORE_EXPORT JavaScriptGetDataCallback : public JavaScriptCallback {
+class QCEFWEBENGINE_EXPORT JavaScriptGetDataCallback : public JavaScriptCallback {
 public:
     JavaScriptGetDataCallback(const QString& signature, class QCefCoreManagerBase* coreManager);
     JavaScriptGetDataCallback();
@@ -43,7 +43,7 @@ typedef QSharedPointer<JavaScriptGetDataCallback> JavaScriptGetDataCallbackPtr;
 Q_DECLARE_METATYPE(JavaScriptGetDataCallback);
 Q_DECLARE_METATYPE(JavaScriptGetDataCallbackPtr);
 
-class QCEFCORE_EXPORT JavaScriptStubCallback : public JavaScriptCallback {
+class QCEFWEBENGINE_EXPORT JavaScriptStubCallback : public JavaScriptCallback {
 public:
     JavaScriptStubCallback();
     JavaScriptStubCallback(const QString& signature, class QCefCoreManagerBase* coreManager);
@@ -53,7 +53,7 @@ typedef QSharedPointer<JavaScriptStubCallback> JavaScriptStubCallbackPtr;
 Q_DECLARE_METATYPE(JavaScriptStubCallback);
 Q_DECLARE_METATYPE(JavaScriptStubCallbackPtr);
 
-class QCEFCORE_EXPORT JavaScriptEventCallback : public JavaScriptCallback {
+class QCEFWEBENGINE_EXPORT JavaScriptEventCallback : public JavaScriptCallback {
 public:
     JavaScriptEventCallback();
     JavaScriptEventCallback(const QString& signature, class QCefCoreManagerBase* coreManager);
@@ -64,7 +64,7 @@ Q_DECLARE_METATYPE(JavaScriptEventCallback);
 Q_DECLARE_METATYPE(JavaScriptEventCallbackPtr);
 
 
-class QCEFCORE_EXPORT JavaScriptCallbacksCollection {
+class QCEFWEBENGINE_EXPORT JavaScriptCallbacksCollection {
     friend class QCefCoreManagerBase;
 private:
     JavaScriptCallbacksCollection(const QVector<QSharedPointer<JavaScriptCallback>>& callbacks)

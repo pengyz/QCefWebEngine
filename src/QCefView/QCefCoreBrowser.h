@@ -1,6 +1,6 @@
 #pragma once;
 
-#include "../QCefCore/QCefCoreBrowserBase.h"
+#include "QCefCoreBrowserBase.h"
 struct QOverlayImageInfo;
 
 class QCefCoreBrowser : public QCefCoreBrowserBase {

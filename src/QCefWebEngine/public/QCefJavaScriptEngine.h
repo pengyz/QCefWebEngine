@@ -6,10 +6,10 @@
 #include <QVariantList>
 
 #include "QCefSetting.h"
-#include "qcefcore_export.h"
+#include "qcefwebengine_export.h"
 
 
-class QCEFCORE_EXPORT QCefJavaScriptEngine : public QObject {
+class QCEFWEBENGINE_EXPORT QCefJavaScriptEngine : public QObject {
     Q_OBJECT
 private:
     QCefJavaScriptEngine();

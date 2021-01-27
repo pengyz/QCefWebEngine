@@ -2,13 +2,13 @@
 #include "QCefCoreManagerBase.h"
 #include "qcefview_export.h"
 
-class QCEFVIEW_EXPORT QCefCoreManager : public QCefCoreManagerBase {
+class QCEFVIEW_EXPORT QCefWebEngine : public QCefCoreManagerBase {
     Q_OBJECT
 public:
-    static QCefCoreManager* get();
+    static QCefWebEngine* get();
 protected:
     virtual QCefCoreManagerBaseImpl* doImplInit() override;
 
 private:
-    static QCefCoreManager* m_instance;
+    static QCefWebEngine* m_instance;
 };

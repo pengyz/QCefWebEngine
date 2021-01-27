@@ -12,7 +12,7 @@
 #include <condition_variable>
 #include <QVector>
 #include <QRect>
-#include "qcefcore_export.h"
+#include "qcefwebengine_export.h"
 
 struct QOverlayImageInfo;
 
@@ -133,7 +133,7 @@ public:
 
 #define LockCoreBrowser(browser)    QCefCoreBrowserLocker lck##__LINE__ (browser, __FILE__, __FUNCTION__, __LINE__)
 
-class QCEFCORE_EXPORT QCefCoreBrowserLocker {
+class QCEFWEBENGINE_EXPORT QCefCoreBrowserLocker {
 public:
     QCefCoreBrowserLocker(const QSharedPointer<CefCoreBrowser>& browser, const char* file, const char* function, int line);
 

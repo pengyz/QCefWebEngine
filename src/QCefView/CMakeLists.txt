@@ -1,5 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.4.1)
-project(${QCEF_VIEW_DLL})
+﻿project(${QCEF_VIEW_DLL})
 INCLUDE(GenerateExportHeader)
 
 
@@ -14,8 +13,9 @@ SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${QCEF_VIEW_SDK_LIB_OUT})
 include_directories(
   ${CMAKE_SOURCE_DIR}/
   ${CMAKE_SOURCE_DIR}/include/
-  "${CMAKE_CURRENT_SOURCE_DIR}/Generated Files"
-  ${CMAKE_SOURCE_DIR}/src/QCefProto
+  "${CMAKE_CURRENT_SOURCE_DIR}/Generated Files/"
+  ${CMAKE_SOURCE_DIR}/src/QCefProto/
+  ${CMAKE_SOURCE_DIR}/src/QCefWebEngine/
 )
 
 file(GLOB_RECURSE _SRC_FILES
@@ -57,7 +57,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt5::Core
     Qt5::Gui 
     Qt5::Widgets
-    QCefCore
+    QCefWebEngine
     ${CEF_DLL_WRAPPER}
     ${CEF_LIB_FILE}
 )

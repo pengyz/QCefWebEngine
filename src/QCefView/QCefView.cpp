@@ -21,11 +21,11 @@
 
 
 #include "public/QCefView.h"
-#include "../QCefCore/CefViewBrowserApp/QCefBrowserHandlerBase.h"
+#include "CefViewBrowserApp/QCefBrowserHandlerBase.h"
 #include "CCefWindowHook.h"
 #include "QCefViewPrivate.h"
-#include "../QCefCore/CCefSetting.h"
-#include "public/QCefCoreManager.h"
+#include "CCefSetting.h"
+#include "public/QCefWebEngine.h"
 #include "include/QCefJavaScriptEngine.h"
 #include "include/CefCoreBrowser.h"
 

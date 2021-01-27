@@ -100,7 +100,7 @@ include_directories(
   ${CEF_ROOT}
 )
 
-set(QCEF_CORE_DLL "QCefCore")
+set(QCEF_WEBENGINE_DLL "QCefWebEngine")
 set(QCEF_BROWSER_DLL "QCefBrowser")
 set(QCEF_VIEW_DLL "QCefView")
 set(QCEF_OVERLAY_DLL "QCefOffscreen")
@@ -108,7 +108,7 @@ set(QCEF_BROWSER_EXE "QCefBrowserProcess")
 
 set(QCEF_FOLDER_NAME "QCefWebEngine")
 
-add_subdirectory(src/QCefCore)
+add_subdirectory(src/QCefWebEngine)
 add_subdirectory(src/QCefView)
 add_subdirectory(src/QCefOffscreen)
 add_subdirectory(src/QCefBrowserProcess)

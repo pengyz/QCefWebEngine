@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.4.1)
-project(${QCEF_CORE_DLL})
+project(${QCEF_WEBENGINE_DLL})
 INCLUDE(GenerateExportHeader)
 
 
@@ -77,5 +77,5 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E make_directory ${QCEF_VIEW_SDK_INC_OUT}
   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${_EXPORT_HEADERS_${PROJECT_NAME}} ${QCEF_VIEW_SDK_INC_OUT}
   COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_SOURCE_DIR}/include
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/qcefcore_export.h ${CMAKE_SOURCE_DIR}/include
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_BINARY_DIR}/qcefwebengine_export.h ${CMAKE_SOURCE_DIR}/include
 )

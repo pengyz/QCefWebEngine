@@ -4,7 +4,7 @@
 #include <QVector>
 #include <QSharedPointer>
 #include <QVariantList>
-#include "qcefcore_export.h"
+#include "qcefwebengine_export.h"
 #include "QCefJsCallbacks.h"
 
 class QCefCoreManagerBaseImpl;
@@ -13,10 +13,10 @@ class CefCoreBrowser;
 /**
  * @brief CEF核心管理器类
  * CEF的初始化，析构，浏览器对象的生命周期管理，浏览器功能执行都通过该类实现
- * QCefView和QCefOverlay应该直接使用此类与CEF进行交互
+ * QCefView和QCefOffscreen应该直接使用此类与CEF进行交互
  * @author Alex.peng
  */
-class QCEFCORE_EXPORT QCefCoreManagerBase : public QObject {
+class QCEFWEBENGINE_EXPORT QCefCoreManagerBase : public QObject {
     Q_OBJECT
 
 protected:

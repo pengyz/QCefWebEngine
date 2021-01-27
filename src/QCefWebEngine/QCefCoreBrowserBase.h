@@ -9,10 +9,10 @@
 #include <QVector>
 #include <functional>
 #include "public/CefCoreBrowser.h"
-#include "qcefcore_export.h"
+#include "qcefwebengine_export.h"
 
 
-class QCEFCORE_EXPORT QCefCoreBrowserBase
+class QCEFWEBENGINE_EXPORT QCefCoreBrowserBase
     : public QObject
     , public CefCoreBrowser {
     friend class QCefCoreManagerImplOverlay;

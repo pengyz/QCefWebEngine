@@ -21,10 +21,10 @@
 #include <include/wrapper/cef_message_router.h>
 #include <include/wrapper/cef_resource_manager.h>
 #pragma endregion cef_headers
-#include "qcefcore_export.h"
+#include "qcefwebengine_export.h"
 
 
-class QCEFCORE_EXPORT CefDevToolClient
+class QCEFWEBENGINE_EXPORT CefDevToolClient
     : public QObject
     , public CefClient
     , public CefLifeSpanHandler {
@@ -43,7 +43,7 @@ public:
 };
 
 
-class QCEFCORE_EXPORT QCefBrowserHandlerBase
+class QCEFWEBENGINE_EXPORT QCefBrowserHandlerBase
     : public QObject
     , public CefClient
     , public CefContextMenuHandler

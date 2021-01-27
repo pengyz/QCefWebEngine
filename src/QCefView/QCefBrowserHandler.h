@@ -1,5 +1,5 @@
 #pragma once;
-#include "../QCefCore/CefViewBrowserApp/QCefBrowserHandlerBase.h"
+#include "CefViewBrowserApp/QCefBrowserHandlerBase.h"
 
 class QCefBrowserHandler : public QCefBrowserHandlerBase {
 public:
