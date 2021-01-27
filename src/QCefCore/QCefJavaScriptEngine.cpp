@@ -169,13 +169,11 @@ bool QCefJavaScriptEngine::writeSynchronizeValue(const QString strSignature, con
         char buffer[1] = { 0 };
         bSucc = writeSynchronizeValueInner(strSignature, buffer, sizeof(buffer));
     }break;
-    case QVariant::Int:
-    case QMetaType::Long: {
+    case QVariant::Int: {
         int iValue = value.toInt();
         bSucc = writeSynchronizeValueInner(strSignature, &iValue, sizeof(iValue));
     }break;
-    case QVariant::UInt:
-    case QMetaType::ULong: {
+    case QVariant::UInt: {
         auto iValue = value.toUInt();
         bSucc = writeSynchronizeValueInner(strSignature, &iValue, sizeof(iValue));
     }break;
@@ -306,7 +304,6 @@ bool QCefJavaScriptEngine::inovkeMethod(int browserId, const QVariantList& messa
     QVector<QGenericArgument> argList;
     argList.resize(10);
     auto cbCollection = QCefCoreManagerBase::get()->genJavaScriptCallbackCollection(callbackSig);
-    //argList.replace(0, Q_ARG(QString, callbackSig));
     argList.replace(0, Q_ARG(JavaScriptCallbacksCollection, cbCollection));
 
     //get meta object
@@ -433,7 +430,25 @@ bool QCefJavaScriptEngine::inovkeMethod(int browserId, const QVariantList& messa
     //带返回值的调用处理
     bool bRet = false;
     QGenericReturnArgument retArg;
+    int iReturnType = metaMethod.returnType();
+    void* data = nullptr;
+    if (iReturnType != QMetaType::Void) {
+        QMetaType returnMetaType = QMetaType(iReturnType);
+        if (returnMetaType.isValid()) {
+            data = returnMetaType.create();
+            retArg = QGenericReturnArgument(QMetaType::typeName(metaMethod.returnType()), data);
+        }
+    }
     bRet = QMetaObject::invokeMethod(obj, qUtf8Printable(method), Qt::DirectConnection, retArg, argList[0],
         argList[1], argList[2], argList[3], argList[4], argList[5], argList[6], argList[7], argList[8], argList[9]);
+    if (data) {
+        //返回值处理，直接使用IPC方式返回到Render进程
+        QString strReturnSignature = getReturnValueSignature(callbackSignature);
+        //通过返回值signature将返回值写入管道，发送给render进程
+        QVariant::Type iTargetTypeId = QVariant::nameToType(QMetaType::typeName(iReturnType));
+        QVariant value(iTargetTypeId, data);
+        bRet &= writeSynchronizeValue(strReturnSignature, value);
+        delete data;
+    }
     return bRet;
 }

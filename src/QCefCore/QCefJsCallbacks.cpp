@@ -92,33 +92,6 @@ qint64 JavaScriptCallback::getFrameId()
 }
 
 //////////////////////////////////////////////////////////////////////////
-JavaScriptReturnValueCallback::JavaScriptReturnValueCallback(const QString& signature)
-    :JavaScriptCallback(signature, nullptr)
-{
-}
-
-JavaScriptReturnValueCallback::JavaScriptReturnValueCallback()
-    : JavaScriptCallback()
-{
-}
-
-JavaScriptReturnValueCallback::~JavaScriptReturnValueCallback()
-{
-    execute(0);
-}
-
-void JavaScriptReturnValueCallback::execute(QVariant value)
-{
-    //写入返回值
-    if (!isValid())
-        return;
-    bool bSucc = QCefJavaScriptEngine::get()->writeSynchronizeValue(m_callbackSignature, value);
-    //如果已成功处理返回值，清空signature，避免析构时继续写入
-    if (bSucc)
-        m_callbackSignature.clear();
-}
-
-
 JavaScriptGetDataCallback::JavaScriptGetDataCallback()
     :JavaScriptCallback()
 {
@@ -200,9 +173,4 @@ void JavaScriptEventCallback::execute(const QString& strEventInfo)
 {
     if (isValid())
         trigger({ strEventInfo });
-}
-
-JavaScriptReturnValueCallbackPtr JavaScriptCallbacksCollection::getReturnCallback() const
-{
-    return _returnCallback;
 }

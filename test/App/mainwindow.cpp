@@ -1,5 +1,9 @@
-#include "mainwindow.h"
+﻿#include "mainwindow.h"
+#include "jsobjects.h"
+
 #include "include/QCefCoreManager.h"
+#include "include/QCefJavaScriptEngine.h"
+
 #include <QHBoxLayout>
 #include <QCoreApplication>
 
@@ -8,6 +12,7 @@ MainWindow::MainWindow(QWidget* parent/* = nullptr*/)
 {
     setupUi(this);
     this->setMinimumSize(800, 600);
+    initJavaScriptEnvironment();
     connect(QCefCoreManager::get(), &QCefCoreManager::sig_allBrowserClosed, this, [this]() {
         m_allClosed = true;
         close();
@@ -30,4 +35,11 @@ void MainWindow::closeEvent(QCloseEvent* evt)
     } else {
         qApp->quit();
     }
+}
+
+bool MainWindow::initJavaScriptEnvironment()
+{
+    QCefJavaScriptEngine::get()->init();
+    QCefJavaScriptEngine::get()->registerObject("base", new JSObjectBase());
+    return true;
 }

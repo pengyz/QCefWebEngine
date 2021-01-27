@@ -135,7 +135,5 @@ JavaScriptCallbacksCollection QCefCoreManagerBase::genJavaScriptCallbackCollecti
     for (const QString& sig : signaturesList) {
         callbacks << QSharedPointer<JavaScriptCallback>(new JavaScriptCallback(sig, this));
     }
-    QString strRetSignature = QCefJavaScriptEngine::get()->getReturnValueSignature(signatures);
-    JavaScriptReturnValueCallbackPtr pRetValueCallback = QSharedPointer<JavaScriptReturnValueCallback>(new JavaScriptReturnValueCallback(strRetSignature));
-    return JavaScriptCallbacksCollection(callbacks, pRetValueCallback);
+    return JavaScriptCallbacksCollection(callbacks);
 }

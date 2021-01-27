@@ -30,17 +30,6 @@ protected:
     qint64 m_frameId = 0;
 };
 
-class QCEFCORE_EXPORT JavaScriptReturnValueCallback : public JavaScriptCallback {
-public:
-    JavaScriptReturnValueCallback(const QString& signature);
-    JavaScriptReturnValueCallback();
-    ~JavaScriptReturnValueCallback();
-    void execute(QVariant value);
-};
-typedef QSharedPointer<JavaScriptReturnValueCallback> JavaScriptReturnValueCallbackPtr;
-Q_DECLARE_METATYPE(JavaScriptReturnValueCallback);
-Q_DECLARE_METATYPE(JavaScriptReturnValueCallbackPtr);
-
 class QCEFCORE_EXPORT JavaScriptGetDataCallback : public JavaScriptCallback {
 public:
     JavaScriptGetDataCallback(const QString& signature, class QCefCoreManagerBase* coreManager);
@@ -78,8 +67,8 @@ Q_DECLARE_METATYPE(JavaScriptEventCallbackPtr);
 class QCEFCORE_EXPORT JavaScriptCallbacksCollection {
     friend class QCefCoreManagerBase;
 private:
-    JavaScriptCallbacksCollection(const QVector<QSharedPointer<JavaScriptCallback>>& callbacks, const JavaScriptReturnValueCallbackPtr& returnCallback)
-        :_callbacks(callbacks), _returnCallback(returnCallback)
+    JavaScriptCallbacksCollection(const QVector<QSharedPointer<JavaScriptCallback>>& callbacks)
+        :_callbacks(callbacks)
     {
     }
 public:
@@ -102,10 +91,7 @@ public:
         return _callbacks.size();
     }
 
-    JavaScriptReturnValueCallbackPtr getReturnCallback() const;
-
 private:
     QVector<QSharedPointer<JavaScriptCallback>> _callbacks;
-    JavaScriptReturnValueCallbackPtr _returnCallback;
 };
 Q_DECLARE_METATYPE(JavaScriptCallbacksCollection);

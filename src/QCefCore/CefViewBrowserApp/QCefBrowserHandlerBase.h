@@ -21,7 +21,7 @@
 #include <include/wrapper/cef_message_router.h>
 #include <include/wrapper/cef_resource_manager.h>
 #pragma endregion cef_headers
-#include "include/qcefcore_export.h"
+#include "qcefcore_export.h"
 
 
 class QCEFCORE_EXPORT CefDevToolClient

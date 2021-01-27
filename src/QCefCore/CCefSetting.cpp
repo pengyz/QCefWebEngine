@@ -23,13 +23,13 @@ int CCefSetting::persist_user_preferences;
 
 CefString CCefSetting::locale;
 
-int CCefSetting::remote_debugging_port;
+int CCefSetting::remote_debugging_port = 8080;
 
 cef_color_t CCefSetting::background_color;
 
 CefString CCefSetting::accept_language_list;
 
-int CCefSetting::debug_enabled = false;
+int CCefSetting::debug_enabled = true;
 
 int CCefSetting::devToolWidth = 800;
 
